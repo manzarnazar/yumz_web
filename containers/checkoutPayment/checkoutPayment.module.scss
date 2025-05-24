@@ -1,0 +1,171 @@
+.card {
+  position: sticky;
+  top: 10px;
+  background-color: var(--secondary-bg);
+  border-radius: 10px;
+  .cardHeader {
+    padding: 30px;
+    @media (max-width: 576px) {
+      padding: 20px 15px 30px;
+    }
+    .title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 29px;
+      font-weight: 600;
+      color: var(--dark-blue);
+      @media (max-width: 576px) {
+        margin-top: 5px;
+        font-size: 16px;
+        line-height: 19px;
+      }
+    }
+    .flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      .flexItem {
+        display: flex;
+        align-items: center;
+        column-gap: 18px;
+        @media (max-width: 576px) {
+          column-gap: 14px;
+        }
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+        .text {
+          font-size: 16px;
+          line-height: 17px;
+          font-weight: 500;
+          letter-spacing: -0.3px;
+          color: var(--secondary-black);
+          span {
+            color: inherit;
+          }
+        }
+        .coupon {
+          display: flex;
+          align-items: center;
+          column-gap: 12px;
+        }
+      }
+      .action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        min-width: 70px;
+        padding: 0 16px;
+        background-color: var(--primary-bg);
+        border-radius: 1000px;
+        font-size: 14px;
+        line-height: 14px;
+        font-weight: 500;
+        letter-spacing: -0.3px;
+        color: var(--secondary-black);
+      }
+    }
+  }
+  .cardBody {
+    padding: 30px;
+    border-top: 1px solid var(--border);
+    @media (max-width: 576px) {
+      padding: 28px 15px;
+    }
+    .block {
+      padding-bottom: 8px;
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+        .item {
+          font-size: 16px;
+          line-height: 17px;
+          letter-spacing: -0.3px;
+          color: var(--secondary-black);
+        }
+      }
+    }
+    .cardFooter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      .btnWrapper {
+        width: 60%;
+      }
+      .priceBlock {
+        text-align: right;
+        .text {
+          margin: 0;
+          margin-bottom: 10px;
+          font-size: 14px;
+          line-height: 14px;
+          font-weight: 500;
+          color: var(--dark-blue);
+        }
+        .price {
+          font-size: 20px;
+          line-height: 20px;
+          font-weight: 700;
+          color: var(--dark-blue);
+        }
+      }
+    }
+  }
+}
+.labelWithTooltip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  column-gap: 6px;
+}
+
+.tooltipWrapper {
+  position: relative;
+  display: inline-block;
+  outline: none;
+
+  &:hover .tooltipText,
+  &:focus-within .tooltipText {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.tooltipIcon {
+  background-color: #ccc;
+  color: rgb(46, 45, 45);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  line-height: 16px;
+  display: inline-block;
+  user-select: none;
+}
+
+.tooltipText {
+  visibility: hidden;
+  width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 10;
+  top: 130%;
+  left: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0;
+  transition: opacity 0.3s;
+}

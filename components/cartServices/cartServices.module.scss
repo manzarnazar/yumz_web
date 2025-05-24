@@ -1,0 +1,112 @@
+.wrapper {
+  padding: 0 30px;
+  border-top: 1px solid var(--border);
+  @media (max-width: 1139px) {
+    padding: 0;
+  }
+  .flex {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+    &:first-child {
+      border: none;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      column-gap: 10px;
+      .icon {
+        position: relative;
+        z-index: 1;
+        .greenDot {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: -1;
+          width: 17px;
+          height: 17px;
+          border-radius: 50%;
+          background-color: var(--primary);
+        }
+        svg {
+          width: 34px;
+          height: 34px;
+          fill: var(--dark-blue);
+        }
+      }
+      .row {
+        .title {
+          margin: 0;
+          margin-bottom: 2px;
+          font-size: 16px;
+          line-height: 17px;
+          font-weight: 500;
+          letter-spacing: -0.3px;
+          color: var(--secondary-black);
+        }
+        .text {
+          margin: 0;
+          font-size: 12px;
+          line-height: 17px;
+          font-weight: 500;
+          letter-spacing: -0.3px;
+          color: var(--secondary-text);
+        }
+      }
+    }
+    .price {
+      font-size: 16px;
+      line-height: 17px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--dark-blue);
+    }
+  }
+}
+.title {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  .tooltipIcon {
+    display: inline-block;
+    background-color: #ccc;
+    color: rgb(34, 34, 34);
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 16px;
+    position: relative;
+    user-select: none;
+    margin-left: 4px;
+
+    &:hover + .tooltipText,
+    &.active + .tooltipText {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  .tooltipText {
+    visibility: hidden;
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    padding: 8px 10px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 10;
+    top: 130%;
+    left: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+}
+

@@ -1,0 +1,44 @@
+.btnWrapper {
+  display: none;
+  position: fixed;
+  bottom: 30px;
+  right: 15px;
+  z-index: 100;
+
+  @media (max-width: 1139px) {
+    display: block;
+    z-index: 100;
+  }
+
+  .btn {
+    position: relative; // Add this to make the badge position relative to the button
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary);
+
+    svg {
+      width: 24px;
+      height: 24px;
+      color: #000;
+    }
+
+    .badge {
+      position: absolute;
+      top: -5px; // Adjust this to position the badge vertically
+      right: -5px; // Adjust this to position the badge horizontally
+      background-color: black;
+      color: white;
+      border-radius: 50%;
+      font-size: 12px;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
