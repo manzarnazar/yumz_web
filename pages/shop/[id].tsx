@@ -31,6 +31,8 @@ import Empty from "components/empty/empty";
 import { error as toastError } from "components/alert/toast";
 import axios from 'axios';
 import { getServerSEOData } from "services/restaurantService";
+import { useSettings } from "contexts/settings/settings.context";
+import AddressModal from "components/addressModal/addressModal";
 const ModalContainer = dynamic(() => import("containers/modal/modal"));
 const ProductContainer = dynamic(
   () => import("containers/productContainer/productContainer"),
@@ -100,6 +102,10 @@ export default function ShopSingle({ memberState,seo }: Props) {
   const uuid = String(query.product || "");
   const searchScrollTo = useRef<HTMLDivElement | null>(null);
 
+  const [showAddressModal, setShowAddressModal] = useState(false);
+    const [editedAddress, setEditedAddress] = useState(null);
+  
+
   const [isSearchCategorySearchOpen, setIsSearchCategorySearchOpen] =
     useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -109,6 +115,11 @@ export default function ShopSingle({ memberState,seo }: Props) {
   
     console.log("this is a test log 123, ", seo);
     
+    const { address, location, updateAddress, updateLocation } = useSettings();
+      
+
+
+      
   
     useEffect(() => {
       if (payment === 'failed') {
@@ -120,9 +131,18 @@ export default function ShopSingle({ memberState,seo }: Props) {
   
       }, [payment, router]);
 
+//       useEffect(() => {
+//   if(location == "56.2639,9.5018"){
+//     setShowAddressModal(true);
+//   } else {
+//     setShowAddressModal(false);
+//   }
+// }, [location]);
+
   useEffect(() => {
     const currentDomain = window.location.origin;
     console.log("Current domain:", currentDomain);
+   
     if (products?.data?.all?.length && isSearchCategorySearchOpen) {
       if (debounceSearchValue?.length) {
         handleSearch(debounceSearchValue);
@@ -139,6 +159,42 @@ export default function ShopSingle({ memberState,seo }: Props) {
     
     { keepPreviousData: true },
   );
+  // console.log("what a address",address);
+
+  // const addressParts = address.split(",");
+  // const filter = addressParts[addressParts.length - 2]?.trim() || "";
+  // const extracted = filter.split(" ");
+  // let cityExtracted = extracted.length == 1 ? extracted?.[0] : extracted?.[1];
+  
+  // console.log("",cityExtracted);
+  
+  // console.log("check if address",data?.data.shop_delivery_zipcodes![].city);
+
+   const addressParts = address ? address.split(",") : "";
+  const filter = addressParts[addressParts.length - 2]?.trim() || "";
+  const extracted = filter.split(" ");
+  let cityExtracted = extracted.length == 1 ? extracted?.[0] : extracted?.[1];
+
+  
+  const deliveryCities = data?.data?.shop_delivery_zipcodes?.map(zip => zip.city) || [];
+  console.log("deliveryCities",deliveryCities);
+  
+  
+
+  const isCityValid = cityExtracted && deliveryCities.some(city => 
+    city?.toLowerCase() === cityExtracted?.toLowerCase()
+  );
+
+  // Show address modal if city is not valid
+  useEffect(() => {
+    if (address && deliveryCities.length > 0 && !isCityValid) {
+      setShowAddressModal(true);
+    } else {
+      setShowAddressModal(false);
+    }
+  }, [address, deliveryCities, isCityValid]);
+
+  
 
   const { data: products, isLoading } = useQuery(
     [
@@ -295,6 +351,7 @@ export default function ShopSingle({ memberState,seo }: Props) {
     description: data?.data?.translation?.description,
     image: getImage(data?.data?.logo_img),
   });
+  
   return (
     <>
       <SEO
@@ -302,6 +359,25 @@ export default function ShopSingle({ memberState,seo }: Props) {
         description={data?.data?.translation?.description}
         image={getImage(data?.data?.logo_img)}
       />
+    {showAddressModal && (
+        <AddressModal
+          open={showAddressModal}
+          city={deliveryCities} 
+          fromshop={true}
+          // onClose={() => {
+          //   setShowAddressModal(false);
+          // }}
+          latlng={location}
+          address={address}
+          fullScreen={!isDesktop}
+          editedAddress={editedAddress}
+          onClearAddress={() => {
+            setEditedAddress(null);
+            setShowAddressModal(false);
+          }}
+  
+        />
+      )}
       <StoreContainer
         data={data?.data}
         memberState={memberState}

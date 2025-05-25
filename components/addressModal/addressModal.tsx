@@ -30,6 +30,8 @@ interface Props extends DialogProps {
   latlng: string;
   editedAddress: IAddress | null;
   onClearAddress: () => void;
+  fromshop?: boolean;
+  city?: string[],
 }
 
 interface formValues {
@@ -45,6 +47,9 @@ export default function AddressModal({
   latlng,
   editedAddress,
   onClearAddress,
+  fromshop,
+  city,
+  
   ...rest
 }: Props) {
   const { t } = useTranslation();
@@ -84,14 +89,44 @@ const addressParts = resolvedAddress.split(",");
   console.log("testsss",cityExtracted);
   
   console.log("extracted:",extracted[0]);
-  
+const cityExtractedLower = cityExtracted?.toLocaleLowerCase() || '';
+const chec = city?.find(c => c.toLowerCase() === cityExtractedLower);
 
-  const { isSuccess } = useQuery(["shopZones", location,extracted[0],cityExtracted ], () =>
-    shopService.checkZone({
-      address: { latitude: location.lat, longitude: location.lng, zip_code: extracted[0],city:cityExtracted },
-    }),
-  );
-  console.log();
+
+    const { isSuccess } = useQuery(
+  ["shopZones", location, extracted[0], fromshop? chec : cityExtracted,], 
+  () => fromshop 
+    ? shopService.checkZone({
+        address: { 
+          latitude: location.lat, 
+          longitude: location.lng, 
+          city: chec  
+        },
+      })
+    : shopService.checkZone({
+        address: { 
+          latitude: location.lat, 
+          longitude: location.lng, 
+          zip_code: extracted[0],
+          city: cityExtracted 
+        },
+      })
+);
+
+      //  const { isSuccess } = useQuery(["shopZones", location,extracted[0],cityExtracted,chec ], () =>
+      //   shopService.checkZone({
+      //     address: { latitude: location.lat, longitude: location.lng, city:chec  },
+      //   }),
+      // );
+
+   
+
+  // const { isSuccess } = useQuery(["shopZones", location,extracted[0],cityExtracted ], () =>
+  //   shopService.checkZone({
+  //     address: { latitude: location.lat, longitude: location.lng, zip_code: extracted[0],city:cityExtracted },
+  //   }),
+  // );
+  // console.log();
   
 
   const queryClient = useQueryClient();
@@ -235,7 +270,8 @@ const addressParts = resolvedAddress.split(",");
   }
 
   return (
-    <ModalContainer {...rest}>
+    <ModalContainer {...rest}
+    >
       <div className={cls.wrapper}>
       <div className={cls.header}>
   <h1 className={cls.title}>{t("enter.delivery.address")}</h1>

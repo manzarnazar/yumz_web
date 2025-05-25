@@ -7,14 +7,14 @@ export interface SEOData {
   image: string;
   bag_tax?: number;
 }
-
 export const getServerSEOData = async (
   domain: string,
   localData: any
 ): Promise<SEOData> => {
   const isYumz = domain === "yumz.dk" || domain === "www.yumz.dk";
+  const isLocalhost = domain === "localhost"; // Add this line
 
-  if (isYumz) {
+  if (isYumz || isLocalhost) { // Modify this line
     return {
       title: localData?.data?.translation?.title || "Yumz - Bestil Takeaway & Levering fra Lokale Restauranter",
       description: localData?.data?.translation?.description || "Yumz - Bestil Takeaway & Levering fra Lokale Restauranter",

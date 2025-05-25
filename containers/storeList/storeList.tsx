@@ -35,10 +35,10 @@ export default function StoreList({ title, shops, loading }: Props) {
   const host = typeof window !== "undefined" ? window.location.host : "";
 
   // Filter shops based on host condition
-  const filteredShops =
-    host !== "yumz.dk" && host !== "www.yumz.dk"
-      ? shops.filter((item) => item.domain === host)
-      : shops;
+   const filteredShops =
+  host && !host.includes('yumz.dk') && !host.includes('localhost') && !host.includes('www.yumz.dk')
+    ? shops.filter((item) => item.domain === host)
+    : shops;
   return (
     <div className={cls.container}>
       <section
