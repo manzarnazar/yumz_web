@@ -80,6 +80,27 @@ export default function AddressModal({
   fetchAddress();
 }, [location]);
 
+useEffect(() => {
+  let isMounted = true;
+  
+  async function fetchAddress() {
+    try {
+      const addr = await getAddressFromLocation(`${location.lat},${location.lng}`);
+      if (isMounted) {
+        setResolvedAddress(addr);
+      }
+    } catch (err) {
+      console.error("Error fetching address:", err);
+      error(t("unable.to.fetch.address"));
+    }
+  }
+  
+  fetchAddress();
+  
+  return () => {
+    isMounted = false;
+  };
+}, [location]);
 
 console.log("test", resolvedAddress);
 const addressParts = resolvedAddress.split(",");
@@ -257,7 +278,11 @@ const chec = city?.find(c => c.toLowerCase() === cityExtractedLower);
     );
   }
 
-  async function defineLocation(position: any) {
+ const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+
+async function defineLocation(position: any) {
+  setIsFetchingAddress(true);
+  try {
     const { coords } = position;
     let latlng: string = `${coords.latitude},${coords.longitude}`;
     const addr = await getAddressFromLocation(latlng);
@@ -267,7 +292,13 @@ const chec = city?.find(c => c.toLowerCase() === cityExtractedLower);
       lng: coords.longitude,
     };
     setLocation(locationObj);
+  } catch (err) {
+    console.error(err);
+    error(t("unable.to.fetch.address"));
+  } finally {
+    setIsFetchingAddress(false);
   }
+}
 
   return (
     <ModalContainer {...rest}
@@ -294,9 +325,12 @@ const chec = city?.find(c => c.toLowerCase() === cityExtractedLower);
 
     {/* Move the GPS button here, shift it to the left */}
     <div className={cls.gpsBtnWrapper}>
-      <DarkButton onClick={defineAddress}>
-        <CompassDiscoverLineIcon />
-      </DarkButton>
+      <DarkButton 
+  onClick={defineAddress}
+  loading={isFetchingAddress}
+>
+  <CompassDiscoverLineIcon />
+</DarkButton>
     </div>
 
     {/* Place submit button next to the search field */}
