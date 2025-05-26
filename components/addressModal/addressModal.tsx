@@ -80,27 +80,6 @@ export default function AddressModal({
   fetchAddress();
 }, [location]);
 
-useEffect(() => {
-  let isMounted = true;
-  
-  async function fetchAddress() {
-    try {
-      const addr = await getAddressFromLocation(`${location.lat},${location.lng}`);
-      if (isMounted) {
-        setResolvedAddress(addr);
-      }
-    } catch (err) {
-      console.error("Error fetching address:", err);
-      error(t("unable.to.fetch.address"));
-    }
-  }
-  
-  fetchAddress();
-  
-  return () => {
-    isMounted = false;
-  };
-}, [location]);
 
 console.log("test", resolvedAddress);
 const addressParts = resolvedAddress.split(",");
@@ -270,33 +249,33 @@ const chec = city?.find(c => c.toLowerCase() === cityExtractedLower);
       return errors;
     },
   });
+const [loadingGPS, setLoadingGPS] = useState(false);
 
-  function defineAddress() {
-    window.navigator.geolocation.getCurrentPosition(
-      defineLocation,
-      console.log,
-    );
-  }
-
- const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+function defineAddress() {
+  setLoadingGPS(true);
+  window.navigator.geolocation.getCurrentPosition(
+    defineLocation,
+    
+    (err) => {
+      console.error(err);
+      setLoadingGPS(false);
+      error(t("unable.to.fetch.location"));
+    }
+  );
+}
 
 async function defineLocation(position: any) {
-  setIsFetchingAddress(true);
+  const { coords } = position;
+  const latlng: string = `${coords.latitude},${coords.longitude}`;
+
   try {
-    const { coords } = position;
-    let latlng: string = `${coords.latitude},${coords.longitude}`;
     const addr = await getAddressFromLocation(latlng);
     if (inputRef.current) inputRef.current.value = addr;
-    const locationObj = {
-      lat: coords.latitude,
-      lng: coords.longitude,
-    };
-    setLocation(locationObj);
+    setLocation({ lat: coords.latitude, lng: coords.longitude });
   } catch (err) {
-    console.error(err);
     error(t("unable.to.fetch.address"));
   } finally {
-    setIsFetchingAddress(false);
+    setLoadingGPS(false);
   }
 }
 
@@ -325,12 +304,10 @@ async function defineLocation(position: any) {
 
     {/* Move the GPS button here, shift it to the left */}
     <div className={cls.gpsBtnWrapper}>
-      <DarkButton 
-  onClick={defineAddress}
-  loading={isFetchingAddress}
->
+     <DarkButton onClick={defineAddress} loading={loadingGPS}>
   <CompassDiscoverLineIcon />
 </DarkButton>
+
     </div>
 
     {/* Place submit button next to the search field */}
