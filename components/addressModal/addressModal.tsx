@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import ModalContainer from "containers/modal/modal";
-import { DialogProps, Grid } from "@mui/material";
+import { CircularProgress, DialogProps, Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import cls from "./addressModal.module.scss";
 import Search2LineIcon from "remixicon-react/Search2LineIcon";
@@ -249,33 +249,32 @@ const chec = city?.find(c => c.toLowerCase() === cityExtractedLower);
       return errors;
     },
   });
-const [loadingGPS, setLoadingGPS] = useState(false);
+  const [loadingLocation, setLoadingLocation] = useState(false);
 
 function defineAddress() {
-  setLoadingGPS(true);
+  setLoadingLocation(true);
   window.navigator.geolocation.getCurrentPosition(
     defineLocation,
-    
     (err) => {
-      console.error(err);
-      setLoadingGPS(false);
+      console.log("Geolocation error:", err);
       error(t("unable.to.fetch.location"));
+      setLoadingLocation(false);
     }
   );
 }
 
-async function defineLocation(position: any) {
+async function defineLocation(position: GeolocationPosition) {
   const { coords } = position;
-  const latlng: string = `${coords.latitude},${coords.longitude}`;
-
+  const latlng = `${coords.latitude},${coords.longitude}`;
   try {
     const addr = await getAddressFromLocation(latlng);
     if (inputRef.current) inputRef.current.value = addr;
     setLocation({ lat: coords.latitude, lng: coords.longitude });
   } catch (err) {
+    console.error("Address resolving failed", err);
     error(t("unable.to.fetch.address"));
   } finally {
-    setLoadingGPS(false);
+    setLoadingLocation(false);
   }
 }
 
@@ -304,10 +303,10 @@ async function defineLocation(position: any) {
 
     {/* Move the GPS button here, shift it to the left */}
     <div className={cls.gpsBtnWrapper}>
-     <DarkButton onClick={defineAddress} loading={loadingGPS}>
-  <CompassDiscoverLineIcon />
-</DarkButton>
+      
+        {loadingLocation ? <CircularProgress size={22} /> : <DarkButton onClick={defineAddress}> <CompassDiscoverLineIcon /></DarkButton>}
 
+      
     </div>
 
     {/* Place submit button next to the search field */}
