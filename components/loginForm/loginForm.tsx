@@ -77,7 +77,15 @@ export default function LoginForm({}: Props) {
           const token = data.token_type + " " + data.access_token;
           setCookie("access_token", token);
           setUserData(data.user);
-          push(`/restaurant/${seoData?.restaurant?.id}`);
+          const domain = window.location.hostname;
+          const allowedDomains = ["yumz.dk", "www.yumz.dk", "localhost"];
+
+          if (!allowedDomains.includes(domain)) {
+            push(`/restaurant/${seoData?.restaurant?.id}`);
+          } else {
+            push("/home");
+          }
+          // push(`/restaurant/${seoData?.restaurant?.id}`);
         })
         .catch(() => error(t("login.invalid")))
         .finally(() => setSubmitting(false));
