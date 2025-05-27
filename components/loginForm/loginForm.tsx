@@ -35,15 +35,18 @@ export default function LoginForm({}: Props) {
 
 
     const [showNavItem, setShowNavItem] = useState(true);
+    const [showNtext, setShowNtext] = useState("true");
         useEffect(() => {
           const host = typeof window !== "undefined" ? window.location.hostname : "";
           if (host !== "yumz.dk" && host !== "www.yumz.dk") {
             setShowNavItem(false); // Hide nav item for other domains
+            setShowNtext(host);
           }
         }, []);
 
       
   console.log("showNavItem",showNavItem);
+  console.log("Host",showNtext);
   
 
 
