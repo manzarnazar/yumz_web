@@ -21,52 +21,41 @@ export default function Login({ }: Props) {
     </>
   );
 }
-
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const authToken = getCookie("access_token", ctx); // Get the auth token from cookies
-
-
+  const authToken = getCookie("access_token", ctx); // server-side cookie
   const isAuthenticated = !!authToken;
 
-  const [seoData, setSeoData] = useState<SEOData | null>(null);
+  let seoData: SEOData | null = null;
 
-  useEffect(() => {
-    const fetchSEO = async () => {
-      const domain = window.location.hostname;
-      const localData = {}; // pass real localData if needed
-      const data = await getServerSEOData(domain, localData);
-      setSeoData(data);
-    };
+  // Fetch SEO data server-side using the host from headers
+  const domain = ctx.req.headers.host || "";
+  const localData = {}; // Provide real data if needed
 
-    fetchSEO();
-  }, []);
-
-  console.log("Client SEO Data:", seoData?.restaurant?.id);
-
-
-
+  try {
+    seoData = await getServerSEOData(domain, localData);
+  } catch (error) {
+    console.error("Failed to fetch SEO data:", error);
+  }
 
   if (isAuthenticated) {
-
-    const domain = window.location.hostname;
     const allowedDomains = ["yumz.dk", "www.yumz.dk", "localhost"];
 
     if (!allowedDomains.includes(domain)) {
       return {
         redirect: {
-          destination: `/restaurant/${seoData?.restaurant?.id}`,
+          destination: `/restaurant/${seoData?.restaurant?.id ?? "fallback-id"}`,
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        redirect: {
+          destination: "/home",
           permanent: false,
         },
       };
     }
-    else
-      return {
-        redirect: {
-          destination: "/home", // Or another authenticated route
-          permanent: false,
-        },
-      };
   }
 
   return {
