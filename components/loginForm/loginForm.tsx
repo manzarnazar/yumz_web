@@ -36,9 +36,9 @@ export default function LoginForm({}: Props) {
   const isDemo = process.env.NEXT_PUBLIC_IS_DEMO_APP === "true";
  const [seoData, setSeoData] = useState<SEOData | null>(null);
   
- const domain = window.location.hostname;
-    useEffect(() => {
-      const fetchSEO = async () => {
+ useEffect(() => {
+   const fetchSEO = async () => {
+        const domain = window.location.hostname;
         const localData = {}; // pass real localData if needed
         const data = await getServerSEOData(domain, localData);
         setSeoData(data);
