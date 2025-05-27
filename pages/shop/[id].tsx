@@ -33,6 +33,7 @@ import axios from 'axios';
 import { getServerSEOData } from "services/restaurantService";
 import { useSettings } from "contexts/settings/settings.context";
 import AddressModal from "components/addressModal/addressModal";
+import NoDeliveryModal from "components/NoDeliveryModal/GuestLoginPromptModal";
 const ModalContainer = dynamic(() => import("containers/modal/modal"));
 const ProductContainer = dynamic(
   () => import("containers/productContainer/productContainer"),
@@ -103,7 +104,9 @@ export default function ShopSingle({ memberState,seo }: Props) {
   const searchScrollTo = useRef<HTMLDivElement | null>(null);
 
   const [showAddressModal, setShowAddressModal] = useState(false);
+  const [noDelivery, setNoDelivery] = useState(false);
     const [editedAddress, setEditedAddress] = useState(null);
+    const { push } = useRouter();
   
 
   const [isSearchCategorySearchOpen, setIsSearchCategorySearchOpen] =
@@ -185,17 +188,19 @@ export default function ShopSingle({ memberState,seo }: Props) {
     city?.toLowerCase() === cityExtracted?.toLowerCase()
   );
 
-  // Show address modal if city is not valid
+
   useEffect(() => {
     if (address && deliveryCities.length > 0 && !isCityValid) {
-      setShowAddressModal(true);
+      setNoDelivery(true);
     } else {
-      setShowAddressModal(false);
+      setNoDelivery(false);
     }
   }, [address, deliveryCities, isCityValid]);
 
   
-
+ const showModel = (parameter: boolean) => {
+  setShowAddressModal(parameter);
+}
   const { data: products, isLoading } = useQuery(
     [
       "products",
@@ -359,14 +364,23 @@ export default function ShopSingle({ memberState,seo }: Props) {
         description={data?.data?.translation?.description}
         image={getImage(data?.data?.logo_img)}
       />
-    {showAddressModal && (
+    {noDelivery && (
+
+       <NoDeliveryModal
+        open={true}
+        onClose={() => setShowAddressModal(false)}
+        onChangeAddress={()=>{showModel(true);
+        }}
+       onContinue={()=>{push("/home");;
+       }}
+      />
+       
+      )}
         <AddressModal
           open={showAddressModal}
-          city={deliveryCities} 
-          fromshop={true}
-          // onClose={() => {
-          //   setShowAddressModal(false);
-          // }}
+          onClose={() => {
+            setShowAddressModal(false);
+          }}
           latlng={location}
           address={address}
           fullScreen={!isDesktop}
@@ -377,7 +391,6 @@ export default function ShopSingle({ memberState,seo }: Props) {
           }}
   
         />
-      )}
       <StoreContainer
         data={data?.data}
         memberState={memberState}

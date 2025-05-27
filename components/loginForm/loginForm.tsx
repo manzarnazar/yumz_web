@@ -58,7 +58,7 @@ export default function LoginForm({}: Props) {
           const token = data.token_type + " " + data.access_token;
           setCookie("access_token", token);
           setUserData(data.user);
-          push("/restaurant/508/checkout");
+          push("/restaurant/508");
         })
         .catch(() => error(t("login.invalid")))
         .finally(() => setSubmitting(false));

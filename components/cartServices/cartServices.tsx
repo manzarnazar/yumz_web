@@ -130,7 +130,7 @@ export default function CartServices({ data, onBagSelectedChange, onBagPriceChan
     )}
   </div>
 )}
- {showAddressModal && !isMatchingCity && (
+ {/* {showAddressModal && !isMatchingCity && (
         <AddressModal
           open={showAddressModal} 
           // onClose={() => {
@@ -145,7 +145,7 @@ export default function CartServices({ data, onBagSelectedChange, onBagPriceChan
             setShowAddressModal(false);
           }}
         />
-      )}
+      )} */}
       
 
       {!!cart.receipt_discount && (
