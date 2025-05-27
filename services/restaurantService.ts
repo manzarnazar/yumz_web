@@ -29,6 +29,9 @@ export const getServerSEOData = async (
     );
     const restaurant = res.data;
 
+    console.log("loggging", restaurant);
+    
+
     if (restaurant?.domain && restaurant?.meta_description) {
       return {
         title: `Om ${restaurant.domain} - Bestil Takeaway & Levering`,
