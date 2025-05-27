@@ -26,6 +26,9 @@ import { getCookie, removeCookie } from "utils/session";
 import getImage from "utils/getImage";
 import getLanguage from "utils/getLanguage";
 import useDebounce from "hooks/useDebounce";
+import { useSettings } from "contexts/settings/settings.context";
+import AddressModal from "components/addressModal/addressModal";
+import NoDeliveryModal from "components/NoDeliveryModal/GuestLoginPromptModal";
 
 const ModalContainer = dynamic(() => import("containers/modal/modal"));
 const ProductContainer = dynamic(
@@ -78,7 +81,17 @@ export default function Restaurant({ memberState }: Props) {
   const dispatch = useAppDispatch();
   const isOpenProduct = Boolean(query.product) || isOpen;
   const uuid = String(query.product || "");
-  console.log("uuid",uuid);
+  
+
+    const [showAddressModal, setShowAddressModal] = useState(false);
+    const [noDelivery, setNoDelivery] = useState(false);
+      const [editedAddress, setEditedAddress] = useState(null);
+      const { push } = useRouter();
+          const { address, location, updateAddress, updateLocation } = useSettings();
+
+
+      
+  
   
 
   const [isSearchCategorySearchOpen, setIsSearchCategorySearchOpen] =
@@ -103,6 +116,35 @@ export default function Restaurant({ memberState }: Props) {
     () => shopService.getById(shopId),
     { keepPreviousData: true },
   );
+
+   const addressParts = address ? address.split(",") : "";
+    const filter = addressParts[addressParts.length - 2]?.trim() || "";
+    const extracted = filter.split(" ");
+    let cityExtracted = extracted.length == 1 ? extracted?.[0] : extracted?.[1];
+  
+    
+    const deliveryCities = data?.data?.shop_delivery_zipcodes?.map(zip => zip.city) || [];
+    console.log("deliveryCities",deliveryCities);
+    
+    
+  
+    const isCityValid = cityExtracted && deliveryCities.some(city => 
+      city?.toLowerCase() === cityExtracted?.toLowerCase()
+    );
+  
+  
+    useEffect(() => {
+      if (address && deliveryCities.length > 0 && !isCityValid) {
+        setNoDelivery(true);
+      } else {
+        setNoDelivery(false);
+      }
+    }, [address, deliveryCities, isCityValid]);
+  
+
+     const showModel = (parameter: boolean) => {
+  setShowAddressModal(parameter);
+}
 
   const { data: products, isLoading } = useQuery(
     [
@@ -221,6 +263,33 @@ export default function Restaurant({ memberState }: Props) {
         description={data?.data?.translation?.description}
         image={getImage(data?.data?.logo_img)}
       />
+      {noDelivery && (
+      
+             <NoDeliveryModal
+              open={true}
+              onClose={() => setShowAddressModal(false)}
+              onChangeAddress={()=>{showModel(true);
+              }}
+             onContinue={()=>{push("/home");;
+             }}
+            />
+             
+            )}
+              <AddressModal
+                open={showAddressModal}
+                onClose={() => {
+                  setShowAddressModal(false);
+                }}
+                latlng={location}
+                address={address}
+                fullScreen={!isDesktop}
+                editedAddress={editedAddress}
+                onClearAddress={() => {
+                  setEditedAddress(null);
+                  setShowAddressModal(false);
+                }}
+        
+              />
       <StoreContainer
         data={data?.data}
         memberState={memberState}

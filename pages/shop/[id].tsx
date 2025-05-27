@@ -162,17 +162,7 @@ export default function ShopSingle({ memberState,seo }: Props) {
     
     { keepPreviousData: true },
   );
-  // console.log("what a address",address);
-
-  // const addressParts = address.split(",");
-  // const filter = addressParts[addressParts.length - 2]?.trim() || "";
-  // const extracted = filter.split(" ");
-  // let cityExtracted = extracted.length == 1 ? extracted?.[0] : extracted?.[1];
-  
-  // console.log("",cityExtracted);
-  
-  // console.log("check if address",data?.data.shop_delivery_zipcodes![].city);
-
+ 
    const addressParts = address ? address.split(",") : "";
   const filter = addressParts[addressParts.length - 2]?.trim() || "";
   const extracted = filter.split(" ");
