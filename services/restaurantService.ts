@@ -6,6 +6,7 @@ export interface SEOData {
   description: string;
   image: string;
   bag_tax?: number;
+  restaurant?: Object;
 }
 export const getServerSEOData = async (
   domain: string,
@@ -33,11 +34,14 @@ export const getServerSEOData = async (
     
 
     if (restaurant?.domain && restaurant?.meta_description) {
+          // console.log("loggging", restaurant);
+
       return {
         title: `Om ${restaurant.domain} - Bestil Takeaway & Levering`,
         description: restaurant.meta_description,
         image: restaurant.logo_img || "https://yumz.dk/images/brand_logo.png",
         bag_tax: restaurant.bag_tax || 0,
+        restaurant:restaurant
       };
     }
 
