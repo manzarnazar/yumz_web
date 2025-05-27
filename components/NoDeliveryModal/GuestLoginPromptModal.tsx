@@ -25,13 +25,13 @@ export default function NoDeliveryModal({
   return (
     <ModalContainer open={open} closable={false}>
       <div className={cls.wrapper}>
-        <p className={cls.message}>{t("Sorry We Don't Deliver Here ")}</p>
+        <p className={cls.message}>{t("Beklager, vi leverer ikke hertil ")}</p>
         <div className={cls.actionsVertical}>
           <PrimaryButton loading={loading} onClick={onChangeAddress}>
-            {t("Change Address")}
+            {t("Skift adresse")}
           </PrimaryButton>
           <SecondaryButton onClick={onContinue}>
-            {t("Continue Exploring")}
+            {t("Udforsk mere")}
           </SecondaryButton>
         </div>
       </div>
