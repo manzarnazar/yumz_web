@@ -1,13 +1,20 @@
 // services/serverSeoService.ts
 import axios from "axios";
 
+
+export interface Restaurant {
+  id: number;
+
+  // ...other fields
+}
 export interface SEOData {
   title: string;
   description: string;
   image: string;
   bag_tax?: number;
-  restaurant?: Object;
+  restaurant?: Restaurant;
 }
+
 export const getServerSEOData = async (
   domain: string,
   localData: any

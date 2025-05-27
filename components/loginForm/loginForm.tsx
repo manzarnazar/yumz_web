@@ -15,6 +15,7 @@ import { setCookie } from "utils/session";
 import { LoginCredentials } from "interfaces/user.interface";
 import { Stack } from "@mui/material";
 import { defaultUser } from "constants/config";
+import { getServerSEOData, SEOData } from "services/restaurantService";
 
 type Props = {};
 interface formValues {
@@ -25,6 +26,8 @@ interface formValues {
   keep_logged?: boolean;
 }
 
+
+
 export default function LoginForm({}: Props) {
   const { t } = useTranslation();
   const { push } = useRouter();
@@ -32,21 +35,22 @@ export default function LoginForm({}: Props) {
 
   const isDemo = process.env.NEXT_PUBLIC_IS_DEMO_APP === "true";
 
-
-
-    const [showNavItem, setShowNavItem] = useState(true);
-    const [showNtext, setShowNtext] = useState("true");
-        useEffect(() => {
-          const host = typeof window !== "undefined" ? window.location.hostname : "";
-          if (host !== "yumz.dk" && host !== "www.yumz.dk") {
-            setShowNavItem(false); // Hide nav item for other domains
-            setShowNtext(host);
-          }
-        }, []);
-
+const [seoData, setSeoData] = useState<SEOData | null>(null);
+const domain = window.location.hostname;
+    
+      useEffect(() => {
+        const fetchSEO = async () => {
+          const localData = {}; // pass real localData if needed
+          const data = await getServerSEOData(domain, localData);
+          setSeoData(data);
+        };
+    
+        fetchSEO();
+      }, []);
       
-  console.log("showNavItem",showNavItem);
-  console.log("Host",showNtext);
+
+  console.log("Host", seoData?.restaurant?.id);
+
   
 
 
