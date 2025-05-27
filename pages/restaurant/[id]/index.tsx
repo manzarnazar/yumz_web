@@ -124,7 +124,7 @@ export default function Restaurant({ memberState }: Props) {
   
     
     const deliveryCities = data?.data?.shop_delivery_zipcodes?.map(zip => zip.city) || [];
-    console.log("deliveryCities",deliveryCities);
+    console.log("CITIES",deliveryCities);
     
     
   
