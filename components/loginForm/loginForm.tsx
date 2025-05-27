@@ -36,9 +36,9 @@ export default function LoginForm({}: Props) {
   const isDemo = process.env.NEXT_PUBLIC_IS_DEMO_APP === "true";
  const [seoData, setSeoData] = useState<SEOData | null>(null);
   
+ const domain = window.location.hostname;
     useEffect(() => {
       const fetchSEO = async () => {
-        const domain = window.location.hostname;
         const localData = {}; // pass real localData if needed
         const data = await getServerSEOData(domain, localData);
         setSeoData(data);
@@ -77,7 +77,7 @@ export default function LoginForm({}: Props) {
           const token = data.token_type + " " + data.access_token;
           setCookie("access_token", token);
           setUserData(data.user);
-          push("/restaurant/508/checkout");
+          push(`/restaurant/${seoData?.restaurant?.id}`);
         })
         .catch(() => error(t("login.invalid")))
         .finally(() => setSubmitting(false));
