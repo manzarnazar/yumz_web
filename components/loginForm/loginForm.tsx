@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import cls from "./loginForm.module.scss";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
@@ -32,6 +32,22 @@ export default function LoginForm({}: Props) {
 
   const isDemo = process.env.NEXT_PUBLIC_IS_DEMO_APP === "true";
 
+
+
+    const [showNavItem, setShowNavItem] = useState(true);
+        useEffect(() => {
+          const host = typeof window !== "undefined" ? window.location.hostname : "";
+          if (host !== "yumz.dk" && host !== "www.yumz.dk") {
+            setShowNavItem(false); // Hide nav item for other domains
+          }
+        }, []);
+
+      
+  console.log("showNavItem",showNavItem);
+  
+
+
+
   const formik = useFormik({
     initialValues: {
       login: "",
@@ -58,7 +74,7 @@ export default function LoginForm({}: Props) {
           const token = data.token_type + " " + data.access_token;
           setCookie("access_token", token);
           setUserData(data.user);
-          push("/restaurant/508");
+          push("/restaurant/508/checkout");
         })
         .catch(() => error(t("login.invalid")))
         .finally(() => setSubmitting(false));
