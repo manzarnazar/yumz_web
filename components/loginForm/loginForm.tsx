@@ -35,21 +35,21 @@ export default function LoginForm({}: Props) {
 
   const isDemo = process.env.NEXT_PUBLIC_IS_DEMO_APP === "true";
 
-const [seoData, setSeoData] = useState<SEOData | null>(null);
-const domain = window.location.hostname;
+// const [seoData, setSeoData] = useState<SEOData | null>(null);
+// const domain = window.location.hostname;
     
-      useEffect(() => {
-        const fetchSEO = async () => {
-          const localData = {}; // pass real localData if needed
-          const data = await getServerSEOData(domain, localData);
-          setSeoData(data);
-        };
+//       useEffect(() => {
+//         const fetchSEO = async () => {
+//           const localData = {}; // pass real localData if needed
+//           const data = await getServerSEOData(domain, localData);
+//           setSeoData(data);
+//         };
     
-        fetchSEO();
-      }, []);
+//         fetchSEO();
+//       }, []);
       
 
-  console.log("Host", seoData?.restaurant?.id);
+//   console.log("Host", seoData?.restaurant?.id);
 
   
 
