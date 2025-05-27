@@ -3,9 +3,7 @@ import axios from "axios";
 
 
 export interface Restaurant {
-  id: number;
-
-  // ...other fields
+  id?: number;
 }
 export interface SEOData {
   title: string;

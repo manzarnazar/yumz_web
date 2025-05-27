@@ -34,24 +34,20 @@ export default function LoginForm({}: Props) {
   const { setUserData } = useAuth();
 
   const isDemo = process.env.NEXT_PUBLIC_IS_DEMO_APP === "true";
-
-// const [seoData, setSeoData] = useState<SEOData | null>(null);
-// const domain = window.location.hostname;
-    
-//       useEffect(() => {
-//         const fetchSEO = async () => {
-//           const localData = {}; // pass real localData if needed
-//           const data = await getServerSEOData(domain, localData);
-//           setSeoData(data);
-//         };
-    
-//         fetchSEO();
-//       }, []);
-      
-
-//   console.log("Host", seoData?.restaurant?.id);
-
+ const [seoData, setSeoData] = useState<SEOData | null>(null);
   
+    useEffect(() => {
+      const fetchSEO = async () => {
+        const domain = window.location.hostname;
+        const localData = {}; // pass real localData if needed
+        const data = await getServerSEOData(domain, localData);
+        setSeoData(data);
+      };
+  
+      fetchSEO();
+    }, []);
+  
+    console.log("Client SEO Data:", seoData?.restaurant?.id);
 
 
 
