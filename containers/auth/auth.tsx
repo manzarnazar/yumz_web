@@ -60,21 +60,17 @@ export default function AuthContainer({ children }: Props) {
       </div>
       <div className={cls.hero}>
         <div className={cls.imgWrapper}>
-        <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              borderRadius: "inherit",
-            }}
-          >
-            <source src="/media/Animation_Mockup.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+       <img
+  src="/media/Animation_Mockup.gif"
+  alt="Authentication animation"
+  style={{
+    width: "70%",
+    height: "70%",
+    objectFit: "cover",
+    borderRadius: "inherit",
+  }}
+/>
+
         </div>
       </div>
     </div>
