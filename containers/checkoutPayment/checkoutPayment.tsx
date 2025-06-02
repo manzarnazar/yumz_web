@@ -27,6 +27,7 @@ import TipWithoutPayment from "components/tip/tipWithoutPayment";
 import ModalContainer from "../modal/modal";
 import { getAddressFromLocation } from "utils/getAddressFromLocation";
 import {useBagPrice} from "hooks/useBagPrice";
+import { selectIsBagTax } from "redux/slices/cart";
 const DrawerContainer = dynamic(() => import("containers/drawer/drawer"));
 const MobileDrawer = dynamic(() => import("containers/drawer/mobileDrawer"));
 
@@ -79,6 +80,7 @@ export default function CheckoutPayment({
   const { settings } = useSettings();
   const [zipcode, setZipcode] = useState<string | null>(null);
   const [city, setCity] = useState<string | null>(null);
+  const isBagTax = useAppSelector(selectIsBagTax);
 
 
    // State to store the human-readable address
@@ -124,8 +126,9 @@ export default function CheckoutPayment({
       coupon,
       currency_id: currency?.id,
       tips: tips,
+      bagTax: isBagTax ? 4.0 : 0
     }),
-    [location, delivery_type, coupon, currency, tips],
+    [location, delivery_type, coupon, currency, tips,isBagTax],
   );
   // console.log(addresss);
 

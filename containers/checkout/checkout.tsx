@@ -70,7 +70,7 @@ export default function CheckoutContainer({
           },
           body: JSON.stringify({
             order_id: orderId, // Use the string version
-            success_url: `https://yumz.dk/guestorders/${id}`,
+            success_url: `https://yumz.dk/guestorders/${id}?`,
             cancel_url: `https://yumz.dk`,
           }),
         });
@@ -210,7 +210,9 @@ export default function CheckoutContainer({
         note: values?.note && values?.note?.length ? values?.note : undefined,
         notes,
         city: cityExtracted,
+        
         tips: values?.tips,
+        bag_tax: 4.0
       };
       if (EXTERNAL_PAYMENTS.includes(formik.values.payment_type?.tag || "")) {
         externalPay({

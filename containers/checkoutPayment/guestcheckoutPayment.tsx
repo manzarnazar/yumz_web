@@ -26,7 +26,8 @@ import { useSettings } from "contexts/settings/settings.context";
 import TipWithoutPayment from "components/tip/tipWithoutPayment";
 import ModalContainer from "../modal/modal";
 import { getAddressFromLocation } from "utils/getAddressFromLocation";
-import {useBagPrice} from "hooks/useBagPrice";
+import { useBagPrice } from "hooks/useBagPrice";
+import { selectIsBagTax } from "redux/slices/cart";
 const DrawerContainer = dynamic(() => import("containers/drawer/drawer"));
 const MobileDrawer = dynamic(() => import("containers/drawer/mobileDrawer"));
 
@@ -48,6 +49,7 @@ type OrderType = {
   total_shop_tax?: number;
   total_tax?: number;
   service_fee?: number;
+  bag_tax?: number;
   tips?: number;
 };
 
@@ -79,6 +81,9 @@ export default function GuestCheckoutPayment({
   const { settings } = useSettings();
   const [zipcode, setZipcode] = useState<string | null>(null);
   const [city, setCity] = useState<string | null>(null);
+    const isBagTax = useAppSelector(selectIsBagTax);
+  
+
 
 
 
@@ -127,18 +132,23 @@ export default function GuestCheckoutPayment({
      coupon,
      currency_id: currency?.id,
      tips: tips,
+    bagTax: isBagTax ? 4.0 : 0
+
    }),
-   [location, delivery_type, coupon, currency, tips],
+   [location, delivery_type, coupon, currency, tips,isBagTax],
  );
- // console.log(addresss);
+
+   
+ 
+//  console.log("Manzar's Test",);
 
  const { isLoading } = useQuery(
    ["calculate", payload, cart,zipcode,city],
    async () => {
      if (!zipcode) {
-       // Prevent calculation if zipcode is not available
+
        warning("Please fill the zipcode first before calculating.");
-       return;  // Return early to avoid triggering calculate without zipcode
+       return;  
      }
  
      const dynamicPayload = {
@@ -308,11 +318,11 @@ export default function GuestCheckoutPayment({
               <Price number={order.service_fee} />
             </div>
           </div>
-          {shop?.bag_tax == 1 && (
+          {order.bag_tax && (
             <div className={cls.row}>
               <div className={cls.item}>{t("bag.tax")}</div>
               <div className={cls.item}>
-                <Price number={bagPrice} />
+                <Price number={order.bag_tax} />
               </div>
             </div>
           )}
@@ -338,8 +348,7 @@ export default function GuestCheckoutPayment({
             <p className={cls.text}>{t("total")}</p>
             <div className={cls.price}>
               <Price number={
-                Number(order.total_price) +
-                (Number(shop?.bag_tax) === 1 ? bagPrice : 0)
+                Number(order.total_price)
               } />
             </div>
           </div>

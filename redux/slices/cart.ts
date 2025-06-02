@@ -4,10 +4,12 @@ import { RootState } from "redux/store";
 
 type CartType = {
   cartItems: CartProduct[];
+  isBagTax: boolean; // Add this line
 };
 
 const initialState: CartType = {
   cartItems: [],
+  isBagTax: true, // Default value
 };
 
 const cartSlice = createSlice({
@@ -98,6 +100,10 @@ const cartSlice = createSlice({
     clearCart(state) {
       state.cartItems = [];
     },
+    // Add this new reducer
+    setIsBagTax(state, action) {
+      state.isBagTax = action.payload;
+    },
   },
 });
 
@@ -107,6 +113,7 @@ export const {
   clearCart,
   reduceCartItem,
   setToCart,
+  setIsBagTax, // Export the new action
 } = cartSlice.actions;
 
 export const selectCart = (state: RootState) => state.cart.cartItems;
@@ -122,5 +129,7 @@ export const selectTotalPrice = (state: RootState) =>
         )),
     0,
   );
+// Add this selector
+export const selectIsBagTax = (state: RootState) => state.cart.isBagTax;
 
 export default cartSlice.reducer;

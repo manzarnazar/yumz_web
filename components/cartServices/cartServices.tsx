@@ -5,13 +5,14 @@ import { useTranslation } from "react-i18next";
 import { IShop } from "interfaces";
 import Price from "components/price/price";
 import { selectCurrency } from "redux/slices/currency";
-import { useAppSelector } from "hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { selectUserCart } from "redux/slices/userCart";
 import Badge from "components/badge/badge";
 import { useBagPrice } from "hooks/useBagPrice";
 import { useSettings } from "contexts/settings/settings.context";
 import dynamic from "next/dynamic";
 import { useMediaQuery } from "@mui/material";
+import { selectIsBagTax, setIsBagTax } from "redux/slices/cart";
 
 const AddressModal = dynamic(() => import("components/addressModal/addressModal"));
 
@@ -32,9 +33,25 @@ export default function CartServices({ data, onBagSelectedChange, onBagPriceChan
   const [isMatchingCity, setIsMatchingCity] = useState(false);
   const isDesktop = useMediaQuery("(min-width:1140px)");
   const [editedAddress, setEditedAddress] = useState(null);
-  // console.log("mr manzar "m);
-  
+   const dispatch = useAppDispatch();
+    
+  const isBagTax = useAppSelector(selectIsBagTax);
 
+
+    useEffect(() => {
+    setIsBagSelected(isBagTax);
+  }, [isBagTax]);
+
+  const handleBagTaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    dispatch(setIsBagTax(checked));
+
+    
+    // setIsBagSelected(checked);
+  };
+  console.log("Manzar is testing", isBagTax);
+  
+  
   useEffect(() => {
     if (address) {
       const add = address.split(",");
@@ -118,8 +135,8 @@ export default function CartServices({ data, onBagSelectedChange, onBagPriceChan
     <label>
       <input
         type="checkbox"
-        checked={isBagSelected}
-        onChange={(e) => setIsBagSelected?.(e.target.checked)}
+        checked={isBagTax}
+        onChange={handleBagTaxChange}
       />
       {t("Bag.tax")}
     </label>

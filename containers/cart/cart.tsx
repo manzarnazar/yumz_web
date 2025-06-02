@@ -4,8 +4,8 @@ import CartHeader from "components/cartHeader/cartHeader";
 import CartProduct from "components/cartProduct/cartProduct";
 import CartServices from "components/cartServices/cartServices";
 import CartTotal from "components/cartTotal/cartTotal";
-import { useAppSelector } from "hooks/useRedux";
-import { selectCart, selectTotalPrice } from "redux/slices/cart";
+import { useAppDispatch, useAppSelector } from "hooks/useRedux";
+import { selectCart, selectTotalPrice, setIsBagTax } from "redux/slices/cart";
 import EmptyCart from "components/emptyCart/emptyCart";
 import { IShop } from "interfaces";
 import { useSettings } from "contexts/settings/settings.context";
@@ -22,6 +22,9 @@ export default function Cart({ shop }: Props) {
   const [price, setPrice] = useState('');
   const [deliveryPrice, setDeliveryPrice] = useState(0);
   const cart = useAppSelector(selectUserCart);
+  const dispatch = useAppDispatch();
+  
+
 
 // 
   console.log("shop",shop);

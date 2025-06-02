@@ -23,6 +23,7 @@ import { useAuth } from "contexts/auth/auth.context";
 import Script from "next/script";
 import Loading from "../../components/loader/loading";
 import GuestCheckoutPayment from "containers/checkoutPayment/guestcheckoutPayment";
+import { selectIsBagTax } from "redux/slices/cart";
 
 type Props = {
   data: IShop;
@@ -49,6 +50,7 @@ export default function GuestCheckoutContainer({
   const queryClient = useQueryClient();
   const [payFastUrl, setPayFastUrl] = useState("");
   const [payFastWebHookWaiting, setPayFastWebHookWaiting] = useState(false);
+  const isBagTax = useAppSelector(selectIsBagTax);
   
 
   const isUsingCustomPhoneSignIn =
@@ -215,6 +217,7 @@ export default function GuestCheckoutContainer({
         notes,
         city: cityExtracted,
         tips: values?.tips,
+        bag_tax: isBagTax ? 4.0 : 0
       };
       if (EXTERNAL_PAYMENTS.includes(formik.values.payment_type?.tag || "")) {
         externalPay({
