@@ -163,7 +163,7 @@ export default function LoginForm({}: Props) {
           {t("login")}
         </PrimaryButton>
       </div>
-      <div className={cls.userInfo}>
+      {/* <div className={cls.userInfo}>
         <Stack>
           <span className={cls.login}>{defaultUser.login}</span>
           <span className={cls.password}>{defaultUser.password}</span>
@@ -175,7 +175,7 @@ export default function LoginForm({}: Props) {
         >
           {t("copy")}
         </button>
-      </div>
+      </div> */}
     </form>
   );
 }
